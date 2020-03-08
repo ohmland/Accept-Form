@@ -1,0 +1,16 @@
+#childEmpForm {
+  opacity: 1;
+  transition: opacity 1s;
+}
+
+#childEmpForm.hide {
+  opacity: 0;
+  position: absolute;
+  left: -999em;
+}
+
+.container {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
