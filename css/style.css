@@ -14,3 +14,57 @@
   background-color: #f2f2f2;
   padding: 20px;
 }
+
+.main {
+  width: 50%;
+  margin: 50px auto;
+}
+
+.input-container {
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.icon {
+  padding: 10px;
+  background: dodgerblue;
+  color: white;
+  min-width: 50px;
+  text-align: center;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  outline: none;
+}
+
+.input-field:focus {
+  border: 2px solid dodgerblue;
+}
+
+.success {
+	width: 50%;
+	margin: 0 auto;
+	padding: 10px;
+	border: 1px solid #3c763d;
+	color: #3c763d;
+	background: #dff0d8;
+	border-radius: 5px;
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.error {
+	width: 50%;
+	margin: 0 auto;
+	padding: 10px;
+	border: 1px solid #a94442;
+	color: #a94442;
+	background: #f2dede;
+	border-radius: 5px;
+	text-align: center;
+	margin-bottom: 20px;
+}
