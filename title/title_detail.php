@@ -25,7 +25,7 @@
 
   list($titleId, $topicId, $titleName, $description, $project, $meetingDate,
        $meetingStartTime, $meetingEndTime, $meetingPlace, $enable,
-       $createDate, $editDate, $TopicName)=mysqli_fetch_array($result);
+       $createDate, $editDate, $topicName)=mysqli_fetch_array($result);
 ?>
   <br>
   <header>
@@ -34,7 +34,7 @@
   <div class="container">
     <b>รหัสชื่อเรื่อง :</b> <?php echo($ttid); ?><br />
     <b>ชื่อเรื่อง :</b> <?php echo($titleName); ?><br />
-    <b>ประเภทหัวข้อ :</b> <?php echo($TopicName); ?><br />
+    <b>ประเภทหัวข้อ :</b> <?php echo($topicName); ?><br />
     <b>รายละเอียด :</b> <br /><?php echo(str_replace("\n","<br />", $description)); ?><br />
     <b>ชื่อโครงการ :</b> <?php echo($project); ?><br />
     <b>วันที่ประชุม :</b> <?php echo date_format(date_create($meetingDate),"d/m/Y"); ?><br />

@@ -12,53 +12,64 @@
 <body>
 <?php
 
-  // if(isset($_GET['tpid'])) {
-  //   $tpid=$_GET['tpid'];
-  //   $oldid = $tpid;
+  if(isset($_GET['ttid'])) {
+    $ttid=$_GET['ttid'];
+    $oldid = $ttid;
   
-  //   $sql = "SELECT TopicId, TopicName, Description,
-  //                 Enable, CreateDate, EditDate
-  //                 FROM topic 
-  //                 WHERE TopicId = '$tpid'";
+    $sql = "SELECT t.*, p.TopicName
+            FROM title t
+            INNER JOIN topic p
+            ON t.topicid = p.topicid
+            WHERE t.TitleId = '$ttid'";
   
-  //   require('../mysql/connect.php');
+    require('../mysql/connect.php');
   
-  //   list($topicId, $topicName, $description,
-  //   $enable, $createDate, $editDate)=mysqli_fetch_array($result);
+    list($titleId, $topicId, $titleName, $description, $project, $meetingDate,
+    $meetingStartTime, $meetingEndTime, $meetingPlace, $enable,
+    $createDate, $editDate, $topicName)=mysqli_fetch_array($result);
   
-  //   require('../mysql/unconn.php');
-  // }
+    require('../mysql/unconn.php');
+  }
 
-  // if(isset($_POST['submit'])) {
+  if(isset($_POST['submit'])) {
+    $ttOldId = $_POST['oldid'];
+    $titleName = $_POST['txtTitleName'];
+    $topicId = $_POST['ddlTopicId'];
+    $titleDescription = $_POST['txtTitleDescription'];
+    $project = $_POST['txtProject'];
+    $meetingDate = $_POST['txtMeetingDate'];
+    $meetingStartTime = $_POST['txtMeetingStartTime'];
+    $meetingEndTime = $_POST['txtMeetingEndTime'];
+    $meetingPlace = $_POST['txtMeetingPlace'];
+    $ttEnable = $_POST['rdbTitleStatus'];
+    $ttEditDate = date('Y-m-d H:i:s');
 
-  //   $tpOldid = $_POST['oldid'];
-  //   $tpName = $_POST['txtTopicName'];
-  //   $tpDesc = $_POST['txtTopicDescription'];
-  //   $tpEnable = $_POST['rdbTopicStatus'];
-  //   $tpEditDate = date('Y-m-d H:i:s');
+    $sql="UPDATE title SET
+      TopicId='$topicId',
+      TitleName='$titleName',
+      Description='$titleDescription',
+      Project='$project',
+      MeetingDate='$meetingDate',
+      MeetingStartTime='$meetingStartTime',
+      MeetingEndTime='$meetingEndTime',
+      MeetingPlace='$meetingPlace',
+      Enable='$ttEnable',
+      EditDate='$ttEditDate'";
 
-  //   $sql="UPDATE topic SET
-  //     TopicName='$tpName', 
-  //     Description='$tpDesc', 
-  //     Enable='$tpEnable', 
-  //     EditDate='$tpEditDate'";
-
-  //   $sql.= " WHERE TopicId='$tpOldid'";
-
-  //   echo $sql;
-
-  //   require('../mysql/connect.php');
-
-  //   if($result === TRUE) {
-  //     $_SESSION['success'] = "แก้ไขหัวข้อเสร็จสิ้น";
-  //   } else {
-  //     $_SESSION['error'] = "แก้ไขหัวข้อผิดพลาด กรุณาตรวจสอบ";
-  //   }
-
-  //   require('../mysql/unconn.php');
-  //   header("Location: topic_detail.php?tpid=" . $tpOldid);
+    $sql.= " WHERE TitleId='$ttOldId'";
     
-  // }
+    require('../mysql/connect.php');
+
+    if($result === TRUE) {
+      $_SESSION['success'] = "แก้ไขหัวข้อเสร็จสิ้น";
+    } else {
+      $_SESSION['error'] = "แก้ไขหัวข้อผิดพลาด กรุณาตรวจสอบ";
+    }
+
+    require('../mysql/unconn.php');
+    header("Location: title_detail.php?ttid=" . $ttOldId);
+    
+  }
 ?>
 
   <br>
@@ -68,34 +79,73 @@
   <div class="container">
     <form action="<?php echo ($_SERVER['PHP_SELF']); ?>" method="post">
       <div class="form-group">
-        <label for="txtTopicId">รหัสชื่อเรื่อง : </label>
+        <label for="txtTitleId">รหัสชื่อเรื่อง : </label>
         <input name="oldid" type="hidden" value="<?php echo($oldid); ?>">
-        <input type="text" name="txtTopicId" id="txtTopicId" class="form-control" value="<?php echo($topicId); ?>" disabled>
+        <input type="text" name="txtTitleId" id="txtTitleId" class="form-control" value="<?php echo($titleId); ?>" disabled>
       </div>
       <div class="form-group">
-        <label for="txtTopicName">ชื่อเรื่อง : </label>
-        <input type="text" name="txtTopicName" id="txtTopicName" placeholder="ชื่อเรื่อง" class="form-control" value="<?php echo($topicName); ?>" required>
+        <label for="txtTitleName">ชื่อเรื่อง : </label>
+        <input type="text" name="txtTitleName" id="txtTitleName" placeholder="ชื่อเรื่อง" class="form-control" value="<?php echo($titleName); ?>" required>
       </div>
       <div class="form-group">
-        <label for="txtTopicDescription">คำอธิบาย : </label>
-        <textarea name="txtTopicDescription" id="txtTopicDescription" rows="5" cols="40" placeholder="คำอธิบาย" class="form-control"><?php echo($description); ?></textarea>
+        <label for="ddlTopicId">ชื่อหัวข้อ :</label>
+        <select name="ddlTopicId" id="ddlTopicId" class="form-control" required>
+          <?php
+            $sql = "SELECT TopicId, TopicName FROM topic ORDER BY TopicId ASC";
+            require('../mysql/connect.php');
+            
+            while($record = mysqli_fetch_array($result)) {
+              if($record[0] == $topicId){
+                echo ("<option selected='" . "selected" . "' value='" .$record[0]. "'>" . $record[1] . "</option>");
+              } else {
+                echo ("<option value='" . $record[0] . "'>" . $record[1] . "</option>");
+              }
+            }
+
+            require('../mysql/unconn.php');
+          ?>
+        </select>
       </div>
       <div class="form-group">
-        <label for="txtTopicStatus">สถานะ : </label>
+        <label for="txtTitleDescription">คำอธิบาย : </label>
+        <textarea name="txtTitleDescription" id="txtTitleDescription" rows="5" cols="40" placeholder="คำอธิบาย" class="form-control"><?php echo($description); ?></textarea>
+      </div>
+      <div class="form-group">
+        <label for="txtProject">ชื่อโครงการ : </label>
+        <input type="text" name="txtProject" id="txtProject" placeholder="ชื่อโครงการ" class="form-control" value="<?php echo($project); ?>">
+      </div>
+      <div class="form-group">
+        <label for="txtMeetingDate">วันที่ประชุม : </label>
+        <input type="date" id="txtMeetingDate" name="txtMeetingDate" class="form-control" value="<?php echo($meetingDate); ?>">
+      </div>
+      <div class="form-group">
+        <label for="txtMeetingStartTime">เวลาเริ่มการประชุม : </label>
+        <input type="time" id="txtMeetingStartTime" name="txtMeetingStartTime" class="form-control" value="<?php echo($meetingStartTime); ?>">
+      </div>
+      <div class="form-group">
+        <label for="txtMeetingEndTime">เวลาสิ้นสุดการประชุม : </label>
+        <input type="time" id="txtMeetingEndTime" name="txtMeetingEndTime" class="form-control" value="<?php echo($meetingEndTime); ?>">
+      </div>
+      <div class="form-group">
+        <label for="txtMeetingPlace">สถานที่ประชุม : </label>
+        <input type="text" name="txtMeetingPlace" id="txtMeetingPlace" placeholder="สถานที่ประชุม" class="form-control" value="<?php echo($meetingPlace); ?>" required>
+      </div>
+      <div class="form-group">
+        <label for="rdbTitleStatus">สถานะ : </label>
         <label class="radio-inline">
-          <input type="radio" id="rdbTopicStatusOff" name="rdbTopicStatus" value="0" <?php echo ($enable==0) ? 'checked' : '' ?>>ปิด
+          <input type="radio" id="rdbTitleStatusOff" name="rdbTitleStatus" value="0" <?php echo ($enable==0) ? 'checked' : '' ?>>ปิด
         </label>
         <label class="radio-inline">
-          <input type="radio" id="rdbTopicStatusOn" name="rdbTopicStatus" value="1" <?php echo ($enable==1) ? 'checked' : '' ?>>เปิด
+          <input type="radio" id="rdbTitleStatusOn" name="rdbTitleStatus" value="1" <?php echo ($enable==1) ? 'checked' : '' ?>>เปิด
         </label>
       </div>
       <div class="form-group">
-        <label for="txtTopicCreateDate">วันที่สร้าง : </label>
-        <input type="datetime" name="txtTopicCreateDate" id="txtTopicCreateDate" placeholder="วันที่สร้าง" class="form-control" value="<?php echo(date_format(date_create($createDate),"d/m/Y")); ?>" disabled>
+        <label for="txtTitleCreateDate">วันที่สร้าง : </label>
+        <input type="datetime" name="txtTitleCreateDate" id="txtTitleCreateDate" placeholder="วันที่สร้าง" class="form-control" value="<?php echo(date_format(date_create($createDate),"d/m/Y")); ?>" disabled>
       </div>
       <div class="form-group">
-        <label for="txtTopicEditDate">วันที่แก้ไข : </label>
-        <input type="datetime" name="txtTopicEditDate" id="txtTopicEditDate" placeholder="วันที่แก้ไข" class="form-control" value="<?php echo ($editDate == '0000-00-00 00:00:00' ? 'ยังไม่มีการแก้ไข' : date_format(date_create($editDate),"d/m/Y")); ?>" disabled>
+        <label for="txtTitleEditDate">วันที่แก้ไข : </label>
+        <input type="datetime" name="txtTitleEditDate" id="txtTitleEditDate" placeholder="วันที่แก้ไข" class="form-control" value="<?php echo ($editDate == '0000-00-00 00:00:00' ? 'ยังไม่มีการแก้ไข' : date_format(date_create($editDate),"d/m/Y")); ?>" disabled>
       </div>
       <div class="form-group">
         <input type="submit" name="submit" class="btn btn-success" value="บันทึก">

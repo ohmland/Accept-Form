@@ -45,8 +45,6 @@
 
     $sql.= " WHERE TopicId='$tpOldid'";
 
-    echo $sql;
-
     require('../mysql/connect.php');
 
     if($result === TRUE) {
@@ -81,7 +79,7 @@
         <textarea name="txtTopicDescription" id="txtTopicDescription" rows="5" cols="40" placeholder="คำอธิบาย" class="form-control"><?php echo($description); ?></textarea>
       </div>
       <div class="form-group">
-        <label for="txtTopicStatus">สถานะ : </label>
+        <label for="rdbTopicStatus">สถานะ : </label>
         <label class="radio-inline">
           <input type="radio" id="rdbTopicStatusOff" name="rdbTopicStatus" value="0" <?php echo ($enable==0) ? 'checked' : '' ?>>ปิด
         </label>
